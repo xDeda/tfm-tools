@@ -184,7 +184,8 @@ class Plugin:
                     }
                     friendlist.append(friend)
                 for friend in friendlist:
-                    if friend['isConnected'] == True:
+                    if friend['isConnected'] and friend['isAddedBack']:
+                        if friend['roomName'][1] == "\x03": friend['roomName'] = friend['roomName'][:1] + friend['roomName'][2:]
                         print(stylize(f"{friend['name']:<20}", colored.fg(168)), stylize(f"{friend['roomName']:>30}", colored.fg(169)))
         elif CCC == (5, 2):  # map received
             mapcode = packet.read32()
