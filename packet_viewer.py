@@ -155,6 +155,37 @@ class Plugin:
                 chatname = packet.readUTF()
                 message = packet.readUTF()
                 print(stylize(">#{} [{}] {}".format(chatname, sender, message), colored.fg(167)))
+            elif source == 0x22:
+                print(stylize("Online friends:", colored.fg(167)))
+                friendlist = []
+                soulmate = {
+                'friendid': int(packet.read32()),
+                'name': str(packet.readUTF()).capitalize(),
+                'gender': int(packet.read8()),
+                'hasAvatar': bool(packet.read32() != 0),
+                'isAddedBack': bool(packet.readBool()),
+                'isConnected': bool(packet.readBool()),
+                'game': (packet.read32()),
+                'roomName': str(packet.readUTF()),
+                'lastConnection': (packet.read32())
+                }
+                friendlist.append(soulmate)
+                for _ in range(packet.read16()):
+                    friend = {
+                    'friendid': int(packet.read32()),
+                    'name': str(packet.readUTF()).capitalize(),
+                    'gender': int(packet.read8()),
+                    'hasAvatar': bool(packet.read32() != 0),
+                    'isAddedBack': bool(packet.readBool()),
+                    'isConnected': bool(packet.readBool()),
+                    'game': (packet.read32()),
+                    'roomName': str(packet.readUTF()),
+                    'lastConnection': (packet.read32())
+                    }
+                    friendlist.append(friend)
+                for friend in friendlist:
+                    if friend['isConnected'] == True:
+                        print(stylize(f"{friend['name']:<20}", colored.fg(168)), stylize(f"{friend['roomName']:>30}", colored.fg(169)))
         elif CCC == (5, 2):  # map received
             mapcode = packet.read32()
             playercount = packet.read16()  # players in the room
